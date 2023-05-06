@@ -9,9 +9,10 @@ import router from './router/index.js'
 // HTTP connection to the API
 const httpLink = createHttpLink({
   // You should use an absolute URL here
-  uri: 'http://127.0.0.1:3000/graphql',
+  uri: 'https://test-4hho.onrender.com/graphql',
 })
-
+// https://test-4hho.onrender.com/
+// http://127.0.0.1:3000/graphql
 // Cache implementation
 const cache = new InMemoryCache()
 
