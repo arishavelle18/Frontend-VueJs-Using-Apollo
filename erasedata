@@ -1,0 +1,86 @@
+
+// import { useQuery } from '@vue/apollo-composable';
+// import gql from 'graphql-tag';
+// import { computed, watchEffect } from 'vue';
+
+const ALL_LINKS_QUERY = gql`
+        {
+            users {
+            id
+            firstName
+            lastName
+            email
+            books{
+                id
+                title
+            }
+            booksCount
+            }
+        }
+        `;
+        const {result} = useQuery(ALL_LINKS_QUERY)
+        const links = computed(() => result.value?.users ?? [])
+        watchEffect(() => {
+        console.log(links.value);
+        });
+
+
+// template
+// <!-- <div>
+// <ul>
+//   <li v-for="link in links" :key="link.id">
+//     {{ link.name }} - {{ link.email }}
+//     <ul>
+//       <li v-for="book in link.books" :key="book.id">
+//         {{ book.title }}
+//       </li>
+//     </ul>
+//   </li>
+// </ul>
+// </div> -->
+
+
+const first_name = ref("");
+        const last_name = ref("");
+        const email = ref("");
+        const password = ref("");
+        const password_confirm = ref("");
+
+
+const CREATE_USER = gqL`
+            mutation createUser($first_name:String!,$last_name:String!,$email:String!,$password:String!,$password_confirm:String!){
+                createUser(firstName:$first_name,lastName:$last_name,email:$email,password:$password,passwordConfirmation:$password_confirm){
+                    id
+                    firstName
+                    lastName
+                    email
+                    errors
+                }
+            }
+        `;
+const handleSubmit = () => {
+    try{
+        const { mutate } = useMutation(CREATE_USER,{
+            variables:{
+                first_name:first_name.value,
+                last_name:last_name.value,
+                email:email.value,
+                password:password.value,
+                password_confirm:password_confirm.value,
+            }
+        });
+        const {result,error} = await mutate();
+    }catch(error){
+        console.error(error)
+    }
+}
+
+
+return{
+    handleSubmit,
+    first_name,
+    last_name,
+    email,
+    password,
+    password_confirm,
+}
