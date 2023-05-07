@@ -24,7 +24,7 @@
         </div>
         <div class="form-group mb-3">
             <label for="">Birthdate</label>
-            <input type="date" class="form-control" v-model="birthdate" required>
+            <input type="date" class="form-control" v-model="birthdate"  :max="maxDate.toISOString().split('T')[0]" required>
         </div>
         <div class="form-group mb-3">
             <label for="">Gender </label>
@@ -61,8 +61,6 @@
             <button @click="openUploadWidget()" type="button">Upload</button>
             <div v-for="image in selectedFile" :key="image">
                 <img :src="image" alt="user uploaded image" style="width: 150px;display: inline-block;">
-                <p>{{ image }}</p>
-                <button @click="deleteImage(image)">Delete</button>
             </div>
         </div>
 
@@ -99,6 +97,8 @@ export default{
         const city = ref("")
         const school = ref(null)
         const selectedFile = ref([])
+        let maxDate = new Date();
+        maxDate.setFullYear(maxDate.getFullYear() - 17)
 
         // create a rounter
         const router = useRouter();
@@ -349,6 +349,7 @@ export default{
             city,
             school,
             selectedFile,
+            maxDate
         }
 
         
