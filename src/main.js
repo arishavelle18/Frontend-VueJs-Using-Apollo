@@ -17,7 +17,7 @@ const httpLink = createHttpLink({
 const cache = new InMemoryCache()
 
 // Create the Apollo client
-const createApolloClient = () => new ApolloClient({
+const createApolloClient = (token='') => new ApolloClient({
   link: httpLink,
   cache,
 })
@@ -31,5 +31,5 @@ const app = createApp({
 })
 
 app.use(router)
-
 app.mount('#app')
+

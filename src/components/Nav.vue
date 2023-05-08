@@ -6,14 +6,21 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul  v-if="isLoggedIn" class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">
+                <button class="btn btn-outline-prima  ry" @click="onLogout">Logout</button>
+              </li>
+            </ul>
+            <ul v-else class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li  class="nav-item">
                 <RouterLink :to="{name:'login'}" class="nav-link" active-class="active">Login</RouterLink>
               </li>
               <li class="nav-item">
                 <RouterLink :to="{name:'register'}" class="nav-link" active-class="active">Sign Up</RouterLink>
               </li>
+              
             </ul>
+            
           </div>
         </div>
       </nav>
@@ -22,14 +29,35 @@
 <script>
 import { RouterLink } from 'vue-router';
 import { useRouter } from 'vue-router';
+import {ref,watchEffect,computed} from 'vue';
     export default {
         name: 'Nav',
-        setup(){
-            const router = useRouter();
+        setup() {
+        const token = ref(localStorage.getItem('token')) || null;
+        const router = useRouter();
 
-            return{
-                router
-            }
-        }
+          
+        const isLoggedIn = computed(() => {
+          return token.value !== null;
+        });
+
+        watchEffect(() => {
+          isLoggedIn.value = token.value !== null;
+        });
+
+
+        const onLogout = () => {
+          localStorage.removeItem('token');
+          token.value = null;
+          router.push({name:'login'});
+        };
+
+        return {
+          router,
+          onLogout,
+          isLoggedIn,
+        };
+      }
+
     }
 </script>

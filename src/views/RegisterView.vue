@@ -196,15 +196,15 @@ export default{
                 });
                 const response = await mutate();
                 console.log(response)
-                // check if the image is lessthan 3  and the user is not null
-                if (response.data.createUser.user && selectedFile.value.length < 3) {
+                // check if the image is lessthan 1  or image is greater than 5 and the user is not null
+                if (response.data.createUser.user && (selectedFile.value.length < 1 || selectedFile.value.length > 5)) {
                     // delete the user
                     const { mutate } = useMutation(DELETE_USER,{
                         variables:{
                             id:response.data.createUser.user.id
                         }
                     });
-                    if (selectedFile.value.length > 0) {
+                    if (selectedFile.value.length > 5) {
                         // delete the image
                         const { mutate } = useMutation(DELETE_IMAGE,{
                             variables:{
@@ -217,7 +217,7 @@ export default{
                     Swal.fire({
                         icon: 'error',
                         title: 'Registration Failed',
-                        text: 'Please upload 3 images',
+                        text: 'Please upload 1 to 5 images only',
                     })
                 // RESET THE FORM
                     first_name.value = "";
