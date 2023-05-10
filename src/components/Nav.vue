@@ -7,6 +7,15 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul  v-if="isLoggedIn" class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li>
+                <RouterLink :to="{name:'message'}" class="nav-link" active-class="active">Message</RouterLink>
+              </li>
+              <li>
+                <RouterLink :to="{name:'profile'}" class="nav-link" active-class="active">Profile</RouterLink>
+              </li>
+              <li>
+                <a href="/" class="nav-link">Home</a>
+              </li>
               <li class="nav-item">
                 <button class="btn btn-outline-prima  ry" @click="onLogout">Logout</button>
               </li>

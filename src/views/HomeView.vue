@@ -2,8 +2,8 @@
    <div>
     <div class="container">
       <h3 v-if="result && result.user">Hi, {{ result.user.email }} </h3>
-      <div>
-        <SwipeView />
+      <div v-if="result && result.user">
+        <SwipeView :user="result.user"/>
       </div>
     </div> 
    
@@ -22,6 +22,7 @@
      user(id: $id) {
        id
        email
+       gender
        genderInterest
      }
    }
@@ -46,7 +47,6 @@
        const decodedToken = JSON.parse(atob(base64));
        userId = decodedToken.user_id;
      }
-    //  provideApolloClient(createApolloClient(token))
 
 
     const {error,loading,result} = useQuery(User,() => ({

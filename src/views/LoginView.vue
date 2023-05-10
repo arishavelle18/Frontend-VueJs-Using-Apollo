@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="handleSumbit">
+    <form @submit.prevent="handleSubmit">
         <h3>Login</h3>
         <div class="form-group mb-3">
            <label for="">Email</label>
@@ -21,6 +21,16 @@ import {useMutation} from '@vue/apollo-composable';
 import Swal from 'sweetalert2';
 import { useRouter } from 'vue-router';
 
+const SIGN_IN_USER = gql`
+            mutation SignInUser($email: String!, $password: String!) {
+                signInUser(input:{email: $email, password: $password}) {
+                    token
+                    errors
+                    success
+                }
+            }
+        `;
+
 export default {
     name: 'Login',
     setup()
@@ -28,17 +38,10 @@ export default {
         const email = ref('');
         const password = ref('');
         const router = useRouter();
-        const SIGN_IN_USER = gql`
-            mutation SignInUser($email: String!, $password: String!) {
-                signInUser(input:{email: $email, password: $password}) {
-                    token
-                    errors
-                }
-            }
-        `;
+        
 
         // create a function to handle the form submission
-        const handleSumbit = async() => {
+        const handleSubmit = async() => {
             // first we need to make sure that the user has entered a valid email address
             const {mutate} = useMutation(SIGN_IN_USER,{
                 variables:{
@@ -49,11 +52,11 @@ export default {
             // if the email is not valid, we will show an alert message
             const response = await mutate();
             // check if the user has entered a valid email address
-            if(response.data.signInUser.errors.lenght > 0 ){
+            if(response.data.signInUser.errors.lenght > 0 || response.data.signInUser.token == null){
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Something went wrong!',
+                    text: 'Incorrect username and password',
                     footer: response.data.signInUser.errors[0].message
                 })
             }
@@ -66,11 +69,12 @@ export default {
                     title: 'Success',
                     text: 'You are logged in!',
                 })
+                console.log(response.data.signInUser)
                 router.push({name: 'home'});
             }
         }
         return {
-            handleSumbit,
+            handleSubmit,
             email,
             password
         }
